@@ -1,0 +1,11 @@
+.posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 8px;
+}
+
+app-post {
+    display: block;
+    width: 100%;
+}

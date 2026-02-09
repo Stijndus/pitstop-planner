@@ -1,0 +1,63 @@
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+    padding: 20px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+
+    h1 {
+        margin-bottom: 8px;
+        font-size: 28px;
+        font-weight: 600;
+    }
+
+    .subtitle {
+        margin-bottom: 32px;
+        color: var(--ion-color-medium);
+        font-size: 16px;
+    }
+}
+
+ion-list {
+    background: transparent;
+    margin-bottom: 16px;
+}
+
+ion-item {
+    --background: transparent;
+    --border-color: var(--ion-color-light);
+    margin-bottom: 12px;
+}
+
+.error-message {
+    text-align: center;
+    margin: 12px 0;
+    font-size: 14px;
+}
+
+.login-button {
+    margin-top: 24px;
+    height: 48px;
+    font-weight: 600;
+}
+
+.register-link {
+    margin-top: 24px;
+
+    p {
+        color: var(--ion-color-medium);
+        font-size: 14px;
+    }
+
+    a {
+        color: var(--ion-color-primary);
+        text-decoration: none;
+        font-weight: 600;
+    }
+}

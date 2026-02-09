@@ -1,0 +1,139 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/feed"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      {{ isOwnProfile ? 'My Profile' : 'Profile' }}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">{{ isOwnProfile ? 'My Profile' : 'Profile' }}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div style="padding: 20px;">
+    @if (loading) {
+    <div style="display: flex; justify-content: center; padding: 40px;">
+      <ion-spinner></ion-spinner>
+    </div>
+    }
+
+    @if (user && !loading) {
+    <!-- User Info Card -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>{{ isOwnProfile ? 'My Profile' : user.name }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item lines="none">
+          <ion-label>
+            <h2>Name</h2>
+            <p>{{ user.name }}</p>
+          </ion-label>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label>
+            <h2>Email</h2>
+            <p>{{ user.email }}</p>
+          </ion-label>
+        </ion-item>
+        @if (user.username) {
+        <ion-item lines="none">
+          <ion-label>
+            <h2>Username</h2>
+            <p>{{ user.username }}</p>
+          </ion-label>
+        </ion-item>
+        }
+        @if (user.bio) {
+        <ion-item lines="none">
+          <ion-label>
+            <h2>Bio</h2>
+            <p>{{ user.bio }}</p>
+          </ion-label>
+        </ion-item>
+        }
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Stats Card -->
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Stats</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item button [routerLink]="['/tabs/profile', userId, 'followers']" lines="full">
+            <ion-label>
+              <h2>Followers</h2>
+              <p>{{ user.followers_count || 0 }}</p>
+            </ion-label>
+          </ion-item>
+          <ion-item button [routerLink]="['/tabs/profile', userId, 'following']" lines="full">
+            <ion-label>
+              <h2>Following</h2>
+              <p>{{ user.following_count || 0 }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+
+    @if (isOwnProfile) {
+    <ion-button expand="block" color="danger" (click)="onLogout()">
+      Logout
+    </ion-button>
+    } @else {
+    @if(user.is_following) {
+    <ion-button expand="block" (click)="unfollowUser()">
+      Unfollow
+    </ion-button>
+    } @else {
+    <ion-button expand="block" (click)="followUser()">
+      Follow
+    </ion-button>
+    }
+    }
+    }
+
+    <!-- Posts Section -->
+    @if (!loading) {
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Posts</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        @if (loadingPosts) {
+        <div style="display: flex; justify-content: center; padding: 20px;">
+          <ion-spinner></ion-spinner>
+        </div>
+        }
+
+        @if (postsError) {
+        <p style="text-align: center; color: var(--ion-color-danger);">{{ postsError }}</p>
+        }
+
+        @if (!loadingPosts && posts.length === 0) {
+        <p style="text-align: center; color: var(--ion-color-medium); padding: 20px;">
+          No posts yet
+        </p>
+        }
+
+        @if (!loadingPosts && posts.length > 0) {
+        <div class="posts-list">
+          @for (post of posts; track post.id) {
+          <app-post [post]="post"></app-post>
+          }
+        </div>
+        }
+      </ion-card-content>
+    </ion-card>
+    }
+  </div>
+</ion-content>
