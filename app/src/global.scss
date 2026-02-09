@@ -26,12 +26,276 @@
 @import "@ionic/angular/css/flex-utils.css";
 
 /**
- * Ionic Dark Mode
+ * Ionic Dark Mode - Automotive Performance Theme
  * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
+ * Dark mode only - optimized for car enthusiasts
+ * Using dark.always.css to force dark mode on all platforms
  */
 
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+@import "@ionic/angular/css/palettes/dark.always.css";
+
+/**
+ * Automotive Performance Theme - Global Styles
+ * -----------------------------------------------------
+ */
+
+// Force dark mode body styles
+body {
+    background-color: #0F172A;
+    color: #E5E7EB;
+
+    // Ensure scrollbar matches theme
+    &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: #111827;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #374151;
+        border-radius: 4px;
+
+        &:hover {
+            background: #4B5563;
+        }
+    }
+}
+
+// Custom utility classes for automotive theme
+.racing-red {
+    color: #DC2626 !important;
+}
+
+.text-primary {
+    color: #E5E7EB !important;
+}
+
+.text-secondary {
+    color: #9CA3AF !important;
+}
+
+.text-disabled {
+    color: #6B7280 !important;
+}
+
+.bg-surface {
+    background-color: #111827 !important;
+}
+
+.bg-elevated {
+    background-color: #1F2937 !important;
+}
+
+// Performance metrics styling
+.metric-card {
+    background: #111827;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    border-left: 4px solid #DC2626;
+
+    .metric-label {
+        color: #9CA3AF;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+    }
+
+    .metric-value {
+        color: #E5E7EB;
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1;
+
+        &.success {
+            color: #22C55E;
+        }
+
+        &.warning {
+            color: #F59E0B;
+        }
+
+        &.danger {
+            color: #EF4444;
+        }
+    }
+
+    .metric-unit {
+        color: #6B7280;
+        font-size: 1rem;
+        margin-left: 4px;
+    }
+}
+
+// Status indicators
+.status-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+
+    &.active {
+        background-color: #22C55E;
+        box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+    }
+
+    &.warning {
+        background-color: #F59E0B;
+        box-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+    }
+
+    &.inactive {
+        background-color: #6B7280;
+    }
+
+    &.critical {
+        background-color: #EF4444;
+        box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+// Racing stripes accent
+.racing-stripe {
+    position: relative;
+
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(180deg,
+                #DC2626 0%,
+                #EF4444 50%,
+                #DC2626 100%);
+        border-radius: 4px;
+    }
+}
+
+// Performance section headers
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: linear-gradient(90deg, #1F2937 0%, #111827 100%);
+    border-left: 4px solid #DC2626;
+    margin-bottom: 16px;
+
+    ion-icon {
+        font-size: 24px;
+        color: #DC2626;
+    }
+
+    h2 {
+        margin: 0;
+        color: #E5E7EB;
+        font-weight: 600;
+        font-size: 1.25rem;
+        letter-spacing: 0.5px;
+    }
+}
+
+// Grid layout for performance data
+.performance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    padding: 16px;
+}
+
+// Elevated card variation
+.card-elevated {
+    background: #1F2937;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+    border: 1px solid #374151;
+}
+
+// Typography enhancements
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #E5E7EB;
+    font-weight: 600;
+}
+
+p {
+    color: #9CA3AF;
+    line-height: 1.6;
+}
+
+// Link styling
+a {
+    color: #DC2626;
+    text-decoration: none;
+    transition: color 0.2s ease;
+
+    &:hover {
+        color: #EF4444;
+    }
+
+    &:active {
+        color: #C11F1F;
+    }
+}
+
+// Selection color
+::selection {
+    background-color: rgba(220, 38, 38, 0.3);
+    color: #E5E7EB;
+}
+
+// Divider
+.divider {
+    height: 1px;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            #374151 50%,
+            transparent 100%);
+    margin: 16px 0;
+}
+
+// Responsive utilities
+@media (max-width: 768px) {
+    .performance-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .metric-card {
+        padding: 12px;
+
+        .metric-value {
+            font-size: 1.5rem;
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .performance-grid {
+        grid-template-columns: 1fr;
+    }
+}

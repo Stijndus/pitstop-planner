@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import { registerIcons } from './icons';
 
 @Component({
   selector: 'app-root',
@@ -7,5 +8,8 @@ import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
   imports: [IonApp, IonRouterOutlet],
 })
 export class AppComponent {
-  constructor() {}
+  constructor() {
+    // Register all Ionicons globally - use any icon without individual imports
+    registerIcons();
+  }
 }
