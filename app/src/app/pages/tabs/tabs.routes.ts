@@ -18,7 +18,7 @@ export const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'feed',
+        redirectTo: 'tab2',
         pathMatch: 'full',
       },
     ],
