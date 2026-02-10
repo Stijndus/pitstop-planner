@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { ApiService } from './api.service';
-import { LoginCredentials, RegisterCredentials, AuthResponse } from '../models';
+import { LoginCredentials, RegisterCredentials, AuthResponse } from '../models/auth.model';
 
 @Injectable({
     providedIn: 'root'
@@ -56,7 +56,7 @@ export class AuthService {
             .pipe(
                 tap((response) => {
                     if (response.data) {
-                        this.saveAuthData(response.data);
+                        this.saveAuthData(response);
                     }
                 })
             );
@@ -70,7 +70,7 @@ export class AuthService {
             .pipe(
                 tap((response) => {
                     if (response.data) {
-                        this.saveAuthData(response.data);
+                        this.saveAuthData(response);
                     }
                 })
             );
@@ -79,9 +79,9 @@ export class AuthService {
     /**
      * Save authentication data
      */
-    private saveAuthData(response: AuthResponse): void {
-        localStorage.setItem(this.TOKEN_KEY, response.authorization.token);
-        localStorage.setItem(this.USER_KEY, JSON.stringify(response.user));
+    private saveAuthData(response: any): void {
+        localStorage.setItem(this.TOKEN_KEY, response.data.access_token);
+        localStorage.setItem(this.USER_KEY, JSON.stringify(response.data.user));
         this.authStateSubject.next(true);
     }
 

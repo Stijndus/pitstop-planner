@@ -1,7 +1,7 @@
 import { Profile } from "./profile.model";
 
 export interface LoginCredentials {
-    login: string;
+    email: string;
     password: string;
 }
 
@@ -15,9 +15,10 @@ export interface RegisterCredentials {
 
 export interface AuthResponse {
     success: boolean;
-    authorization: {
-        token: string;
-        type: string;
+    data: {
+        access_token: string;
+        expires_in: string;
+        token_type: string;
+        user: Profile;
     };
-    user: Profile;
 }

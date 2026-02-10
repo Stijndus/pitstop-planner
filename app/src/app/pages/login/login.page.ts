@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { AuthService } from '../../services/auth.service';
-import { LoginCredentials } from '../../models';
+import { LoginCredentials } from '../../models/auth.model';
 
 @Component({
     selector: 'app-login',
@@ -15,7 +15,7 @@ import { LoginCredentials } from '../../models';
 })
 export class LoginPage {
     credentials: LoginCredentials = {
-        login: '',
+        email: '',
         password: ''
     };
 

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { AuthService } from '../../services/auth.service';
-import { RegisterCredentials } from '../../models';
+import { RegisterCredentials } from '../../models/auth.model';
 
 @Component({
     selector: 'app-register',

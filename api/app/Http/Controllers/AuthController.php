@@ -7,42 +7,31 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    /**
-     * Create a new AuthController instance.
-     */
-    public function __construct()
-    {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
-    }
-
     /**
      * Register a new user.
      */
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'username' => 'required|string|max:255|unique:users',
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
         if ($validator->fails()) {
-            return ApiResponse::error('Validation failed', 422);
+            return ApiResponse::error($validator->errors(), 422);
         }
 
         $user = User::create([
-            'username' => $request->username,
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        $token = auth()->login($user);
+        $token = auth('api')->login($user);
 
         return $this->respondWithToken($token);
     }
@@ -58,12 +47,12 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return ApiResponse::error('Validation failed', 422);
+            return ApiResponse::error($validator->errors(), 422);
         }
 
         $credentials = $request->only('email', 'password');
 
-        if (!$token = auth()->attempt($credentials)) {
+        if (!$token = auth('api')->attempt($credentials)) {
             return ApiResponse::error('Invalid credentials', 401);
         }
 
@@ -75,7 +64,7 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return ApiResponse::success(auth()->user());
+        return ApiResponse::success(auth('api')->user());
     }
 
     /**
@@ -83,7 +72,7 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        auth()->logout();
+        auth('api')->logout();
 
         return ApiResponse::success(null, 'Successfully logged out');
     }
@@ -93,7 +82,7 @@ class AuthController extends Controller
      */
     public function refresh()
     {
-        return $this->respondWithToken(auth()->refresh());
+        return $this->respondWithToken(auth('api')->refresh());
     }
 
     /**
@@ -104,8 +93,8 @@ class AuthController extends Controller
         return ApiResponse::success([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth()->user()
+            'expires_in' => auth('api')->factory()->getTTL() * 60,
+            'user' => auth('api')->user()
         ]);
     }
 }
