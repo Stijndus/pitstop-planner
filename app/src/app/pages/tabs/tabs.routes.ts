@@ -10,7 +10,7 @@ export const routes: Routes = [
       {
         path: 'garage',
         loadComponent: () =>
-          import('../tab2/tab2.page').then((m) => m.Tab2Page),
+          import('../garage/garage.page').then((m) => m.GaragePage),
       },
       {
         path: 'profile/:userId',
