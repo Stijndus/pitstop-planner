@@ -15,7 +15,6 @@ export class TabsPage implements OnInit {
   userId = signal(1);
 
   constructor(private authService: AuthService) {
-    addIcons({ home, ellipse, person, add, personCircleOutline, heartOutline, paperPlaneOutline, chatbubbleOutline });
   }
 
   ngOnInit() {

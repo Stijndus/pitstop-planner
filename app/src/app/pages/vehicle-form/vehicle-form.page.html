@@ -1,0 +1,148 @@
+<ion-header [translucent]="true">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/tabs/garage"></ion-back-button>
+        </ion-buttons>
+        <ion-title>{{ isEditMode ? 'Edit Vehicle' : 'Add Vehicle' }}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large">{{ isEditMode ? 'Edit Vehicle' : 'Add Vehicle' }}</ion-title>
+        </ion-toolbar>
+    </ion-header>
+
+    <div class="form-container">
+        @if (isLoading && isEditMode) {
+        <div class="loading-container">
+            <ion-spinner name="crescent"></ion-spinner>
+            <p>Loading vehicle...</p>
+        </div>
+        } @else {
+        <form (ngSubmit)="onSubmit()">
+            <!-- Basic Information Section -->
+            <div class="section-header">
+                <ion-icon name="car-sport-outline"></ion-icon>
+                <h2>Basic Information</h2>
+            </div>
+
+            <ion-list>
+                <ion-item>
+                    <ion-input label="Nickname (Optional)" labelPlacement="floating" type="text"
+                        [(ngModel)]="vehicleData.name" name="name" placeholder="e.g., Daily Driver, Beast, Red Rocket">
+                    </ion-input>
+                </ion-item>
+
+                <ion-item>
+                    <ion-select label="Make" labelPlacement="floating" [(ngModel)]="vehicleData.make" name="make"
+                        interface="action-sheet" placeholder="Select or type make">
+                        @for (make of popularMakes; track make) {
+                        <ion-select-option [value]="make">{{ make }}</ion-select-option>
+                        }
+                    </ion-select>
+                </ion-item>
+
+                <ion-item>
+                    <ion-input label="Model *" labelPlacement="floating" type="text" [(ngModel)]="vehicleData.model"
+                        name="model" required placeholder="e.g., Supra, M3, Mustang">
+                    </ion-input>
+                </ion-item>
+
+                <ion-item>
+                    <ion-select label="Year *" labelPlacement="floating" [(ngModel)]="vehicleData.year" name="year"
+                        interface="popover" required>
+                        @for (year of generateYears(); track year) {
+                        <ion-select-option [value]="year">{{ year }}</ion-select-option>
+                        }
+                    </ion-select>
+                </ion-item>
+
+                <ion-item>
+                    <ion-input label="License Plate" labelPlacement="floating" type="text"
+                        [(ngModel)]="vehicleData.license_plate" name="license_plate" placeholder="e.g., ABC-1234">
+                    </ion-input>
+                </ion-item>
+            </ion-list>
+
+            <!-- Odometer Section -->
+            <div class="section-header">
+                <ion-icon name="speedometer-outline"></ion-icon>
+                <h2>Odometer</h2>
+            </div>
+
+            <ion-list>
+                <ion-item>
+                    <ion-input label="Current Mileage" labelPlacement="floating" type="number"
+                        [(ngModel)]="vehicleData.odometer" name="odometer" min="0" placeholder="0">
+                    </ion-input>
+                </ion-item>
+
+                <ion-item>
+                    <ion-select label="Unit" labelPlacement="floating" [(ngModel)]="vehicleData.odometer_unit"
+                        name="odometer_unit" interface="popover">
+                        <ion-select-option value="kilometers">Kilometers</ion-select-option>
+                        <ion-select-option value="miles">Miles</ion-select-option>
+                    </ion-select>
+                </ion-item>
+            </ion-list>
+
+            <!-- Maintenance Section -->
+            <div class="section-header">
+                <ion-icon name="construct-outline"></ion-icon>
+                <h2>Maintenance</h2>
+            </div>
+
+            <ion-list>
+                <ion-item>
+                    <ion-input label="Oil Change Interval" labelPlacement="floating" type="number"
+                        [(ngModel)]="vehicleData.oil_change_interval" name="oil_change_interval" min="0"
+                        [placeholder]="'Every ' + (vehicleData.odometer_unit === 'miles' ? 'miles' : 'km')">
+                    </ion-input>
+                    <ion-note slot="helper">How often to change oil ({{ vehicleData.odometer_unit }})</ion-note>
+                </ion-item>
+
+                <ion-item>
+                    <ion-input label="Service Interval" labelPlacement="floating" type="number"
+                        [(ngModel)]="vehicleData.service_interval" name="service_interval" min="0"
+                        [placeholder]="'Every ' + (vehicleData.odometer_unit === 'miles' ? 'miles' : 'km')">
+                    </ion-input>
+                    <ion-note slot="helper">Regular service interval ({{ vehicleData.odometer_unit }})</ion-note>
+                </ion-item>
+
+                <ion-item>
+                    <ion-input label="Last Service Date" labelPlacement="floating" type="date"
+                        [(ngModel)]="vehicleData.last_service_date" name="last_service_date">
+                    </ion-input>
+                </ion-item>
+            </ion-list>
+
+            <!-- Error Message -->
+            @if (errorMessage) {
+            <ion-text color="danger">
+                <p class="error-message">{{ errorMessage }}</p>
+            </ion-text>
+            }
+
+            <!-- Action Buttons -->
+            <div class="button-group">
+                <ion-button expand="block" color="medium" fill="outline" type="button" (click)="onCancel()"
+                    [disabled]="isLoading">
+                    Cancel
+                </ion-button>
+
+                <ion-button expand="block" color="primary" type="submit"
+                    [disabled]="isLoading || !vehicleData.make || !vehicleData.model || !vehicleData.year">
+                    @if (isLoading) {
+                    <ion-spinner name="crescent"></ion-spinner>
+                    } @else {
+                    <ion-icon name="checkmark" slot="start"></ion-icon>
+                    <span>{{ isEditMode ? 'Update' : 'Add' }} Vehicle</span>
+                    }
+                </ion-button>
+            </div>
+        </form>
+        }
+    </div>
+</ion-content>

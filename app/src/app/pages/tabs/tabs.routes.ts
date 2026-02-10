@@ -6,8 +6,9 @@ export const routes: Routes = [
     path: '',
     component: TabsPage,
     children: [
+
       {
-        path: 'tab2',
+        path: 'garage',
         loadComponent: () =>
           import('../tab2/tab2.page').then((m) => m.Tab2Page),
       },
@@ -17,8 +18,18 @@ export const routes: Routes = [
           import('../profile/profile.page').then((m) => m.ProfilePage),
       },
       {
+        path: 'vehicle/add',
+        loadComponent: () =>
+          import('../vehicle-form/vehicle-form.page').then((m) => m.VehicleFormPage),
+      },
+      {
+        path: 'vehicle/edit/:id',
+        loadComponent: () =>
+          import('../vehicle-form/vehicle-form.page').then((m) => m.VehicleFormPage),
+      },
+      {
         path: '',
-        redirectTo: 'tab2',
+        redirectTo: 'garage',
         pathMatch: 'full',
       },
     ],
