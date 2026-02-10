@@ -55,3 +55,120 @@
         font-weight: 600;
     }
 }
+
+.vehicles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    padding: 16px;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.vehicle-card {
+    margin: 0;
+    --background: var(--ion-card-background);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    ion-card-header {
+        cursor: pointer;
+        padding: 16px;
+        border-bottom: 1px solid var(--ion-color-step-150);
+
+        .card-title-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+
+            ion-icon {
+                font-size: 24px;
+            }
+
+            ion-card-title {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: var(--ion-text-color);
+                margin: 0;
+            }
+        }
+
+        .vehicle-details {
+            margin: 0 0 4px 0;
+            font-size: 0.9rem;
+            color: var(--ion-color-medium);
+        }
+
+        ion-note {
+            font-size: 0.85rem;
+        }
+    }
+
+    ion-card-content {
+        padding: 16px;
+
+        .vehicle-stats {
+            margin-bottom: 16px;
+
+            .stat {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px;
+                background: var(--ion-color-step-50);
+                border-radius: 6px;
+
+                ion-icon {
+                    font-size: 20px;
+                    color: var(--ion-color-primary);
+                }
+
+                span {
+                    font-size: 0.95rem;
+                    color: var(--ion-text-color);
+                    font-weight: 500;
+                }
+            }
+        }
+
+        ion-button {
+            margin: 0;
+            font-weight: 600;
+            --box-shadow: 0 2px 6px rgba(var(--ion-color-primary-rgb), 0.3);
+
+            ion-icon {
+                font-size: 18px;
+            }
+        }
+    }
+}
+
+// Dark mode enhancements
+@media (prefers-color-scheme: dark) {
+    .vehicle-card {
+        --background: var(--ion-color-step-50);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+
+        &:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+        }
+
+        ion-card-header {
+            border-bottom-color: var(--ion-color-step-200);
+        }
+
+        ion-card-content {
+            .vehicle-stats .stat {
+                background: var(--ion-color-step-100);
+            }
+        }
+    }
+}

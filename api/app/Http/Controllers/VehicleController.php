@@ -49,6 +49,8 @@ class VehicleController extends Controller
             'oil_change_interval' => 'nullable|integer|min:0',
             'last_service_date' => 'nullable|date',
             'service_interval' => 'nullable|integer|min:0',
+            'fuel_tank_size' => 'nullable|numeric|min:0',
+            'fuel_unit' => 'nullable|in:L,gal',
         ]);
 
         if ($validator->fails()) {
@@ -106,6 +108,8 @@ class VehicleController extends Controller
             'oil_change_interval' => 'nullable|integer|min:0',
             'last_service_date' => 'nullable|date',
             'service_interval' => 'nullable|integer|min:0',
+            'fuel_tank_size' => 'nullable|numeric|min:0',
+            'fuel_unit' => 'nullable|in:L,gal',
         ]);
 
         if ($validator->fails()) {

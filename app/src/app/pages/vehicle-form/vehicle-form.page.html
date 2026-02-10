@@ -88,6 +88,31 @@
                 </ion-item>
             </ion-list>
 
+            <!-- Fuel Tank Section -->
+            <div class="section-header">
+                <ion-icon name="water-outline"></ion-icon>
+                <h2>Fuel Tank</h2>
+            </div>
+
+            <ion-list>
+                <ion-item>
+                    <ion-input label="Fuel Tank Size" labelPlacement="floating" type="number"
+                        [(ngModel)]="vehicleData.fuel_tank_size" name="fuel_tank_size" min="0" step="0.1"
+                        placeholder="e.g., 50">
+                    </ion-input>
+                    <ion-note slot="helper">Capacity in {{ vehicleData.fuel_unit === 'gal' ? 'gallons' : 'liters'
+                        }}</ion-note>
+                </ion-item>
+
+                <ion-item>
+                    <ion-select label="Fuel Unit" labelPlacement="floating" [(ngModel)]="vehicleData.fuel_unit"
+                        name="fuel_unit" interface="popover">
+                        <ion-select-option value="L">Liters</ion-select-option>
+                        <ion-select-option value="gal">Gallons</ion-select-option>
+                    </ion-select>
+                </ion-item>
+            </ion-list>
+
             <!-- Maintenance Section -->
             <div class="section-header">
                 <ion-icon name="construct-outline"></ion-icon>

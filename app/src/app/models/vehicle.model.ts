@@ -11,6 +11,8 @@ export interface Vehicle {
     oil_change_interval?: number;
     last_service_date?: string;
     service_interval?: number;
+    fuel_tank_size?: number;
+    fuel_unit?: 'L' | 'gal';
     created_at: string;
     updated_at: string;
     deleted_at?: string;
@@ -27,6 +29,8 @@ export interface CreateVehicleData {
     oil_change_interval?: number;
     last_service_date?: string;
     service_interval?: number;
+    fuel_tank_size?: number;
+    fuel_unit?: 'L' | 'gal';
 }
 
 export interface UpdateVehicleData {
@@ -40,6 +44,8 @@ export interface UpdateVehicleData {
     oil_change_interval?: number;
     last_service_date?: string;
     service_interval?: number;
+    fuel_tank_size?: number;
+    fuel_unit?: 'L' | 'gal';
 }
 
 export interface VehicleStatistics {

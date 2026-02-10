@@ -35,26 +35,34 @@
       </ion-button>
     </div>
     } @else {
-    <ion-list>
+    <div class="vehicles-grid">
       @for (vehicle of vehicles(); track vehicle.id) {
-      <ion-item [routerLink]="['/tabs/vehicle/edit', vehicle.id]" detail="true">
-        <ion-icon name="car-sport-outline" slot="start" color="primary"></ion-icon>
-        <ion-label>
-          <h2>{{ getDisplayName(vehicle) }}</h2>
-          <p>{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}</p>
+      <ion-card class="vehicle-card">
+        <ion-card-header [routerLink]="['/tabs/vehicle/edit', vehicle.id]">
+          <div class="card-title-row">
+            <ion-icon name="car-sport-outline" color="primary"></ion-icon>
+            <ion-card-title>{{ getDisplayName(vehicle) }}</ion-card-title>
+          </div>
+          <p class="vehicle-details">{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}</p>
           @if (vehicle.license_plate) {
           <ion-note color="medium">{{ vehicle.license_plate }}</ion-note>
           }
-        </ion-label>
-        <div slot="end" class="vehicle-info">
-          <ion-note color="medium">
-            <ion-icon name="speedometer-outline"></ion-icon>
-            {{ formatOdometer(vehicle) }}
-          </ion-note>
-        </div>
-      </ion-item>
+        </ion-card-header>
+        <ion-card-content>
+          <div class="vehicle-stats">
+            <div class="stat">
+              <ion-icon name="speedometer-outline"></ion-icon>
+              <span>{{ formatOdometer(vehicle) }}</span>
+            </div>
+          </div>
+          <ion-button expand="block" (click)="openFuelLogModal(vehicle, $event)" color="primary">
+            <ion-icon name="water-outline" slot="start"></ion-icon>
+            Log Fuel
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
       }
-    </ion-list>
+    </div>
     }
   </div>
 </ion-content>

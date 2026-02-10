@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Vehicle extends Model
 {
@@ -28,6 +29,8 @@ class Vehicle extends Model
         'oil_change_interval',
         'last_service_date',
         'service_interval',
+        'fuel_tank_size',
+        'fuel_unit',
     ];
 
     /**
@@ -55,6 +58,14 @@ class Vehicle extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get all fuel logs for the vehicle.
+     */
+    public function fuelLogs(): HasMany
+    {
+        return $this->hasMany(FuelLog::class);
     }
 
     /**

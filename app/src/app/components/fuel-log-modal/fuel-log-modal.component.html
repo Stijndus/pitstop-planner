@@ -1,0 +1,65 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button (click)="dismiss()">
+                <ion-icon name="close" slot="icon-only"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>Add Fuel Log</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="save()" [disabled]="validationErrors().length > 0">
+                <strong>Save</strong>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <div class="fuel-log-form">
+        <div class="vehicle-info">
+            <h2>{{ vehicle?.name || vehicle?.make + ' ' + vehicle?.model }}</h2>
+            <ion-note>{{ vehicle?.year }}</ion-note>
+        </div>
+
+        <ion-item>
+            <ion-label position="floating">Fuel Price per {{ getFuelUnitLabel() }}</ion-label>
+            <ion-input type="number" [(ngModel)]="fuelPricePerUnit" (ionInput)="onInputChange()" placeholder="0.00"
+                step="0.01"></ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-label position="floating">Amount Tanked ({{ getFuelUnitLabel() }})</ion-label>
+            <ion-input type="number" [(ngModel)]="fuelAmount" (ionInput)="onInputChange()" placeholder="0.0"
+                step="0.1"></ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-label position="floating">Mileage ({{ getOdometerUnitLabel() }})</ion-label>
+            <ion-input type="number" [(ngModel)]="mileage" (ionInput)="onInputChange()" placeholder="0"
+                step="1"></ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-label>Full Tank</ion-label>
+            <ion-toggle [(ngModel)]="isFullTankManual" (ionChange)="onFullTankToggle()" slot="end"></ion-toggle>
+        </ion-item>
+
+        @if (totalCost() > 0) {
+        <div class="total-cost-display">
+            <div class="total-cost-label">Total Cost</div>
+            <div class="total-cost-amount">{{ totalCost() | number:'1.2-2' }}</div>
+        </div>
+        }
+
+        @if (validationErrors().length > 0) {
+        <div class="validation-errors">
+            @for (error of validationErrors(); track error) {
+            <div class="error-message">
+                <ion-icon name="alert-circle"></ion-icon>
+                {{ error }}
+            </div>
+            }
+        </div>
+        }
+    </div>
+</ion-content>

@@ -24,7 +24,9 @@ export class VehicleFormPage implements OnInit {
         odometer_unit: 'kilometers',
         oil_change_interval: undefined,
         last_service_date: undefined,
-        service_interval: undefined
+        service_interval: undefined,
+        fuel_tank_size: undefined,
+        fuel_unit: 'L'
     };
 
     isEditMode = false;
@@ -75,7 +77,9 @@ export class VehicleFormPage implements OnInit {
                         odometer_unit: vehicle.odometer_unit,
                         oil_change_interval: vehicle.oil_change_interval,
                         last_service_date: vehicle.last_service_date,
-                        service_interval: vehicle.service_interval
+                        service_interval: vehicle.service_interval,
+                        fuel_tank_size: vehicle.fuel_tank_size,
+                        fuel_unit: vehicle.fuel_unit || 'L'
                     };
                 }
             },
