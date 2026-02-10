@@ -3,6 +3,11 @@
     <ion-title>
       Garage
     </ion-title>
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/tabs/vehicle/add']">
+        <ion-icon slot="icon-only" name="add"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -13,5 +18,43 @@
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Garage page"></app-explore-container>
+  <div class="garage-container">
+    @if (isLoading()) {
+    <div class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Loading vehicles...</p>
+    </div>
+    } @else if (vehicles().length === 0) {
+    <div class="empty-state">
+      <ion-icon name="car-sport-outline"></ion-icon>
+      <h2>No Vehicles Yet</h2>
+      <p>Add your first vehicle to get started</p>
+      <ion-button [routerLink]="['/tabs/vehicle/add']" color="primary">
+        <ion-icon name="add" slot="start"></ion-icon>
+        Add Vehicle
+      </ion-button>
+    </div>
+    } @else {
+    <ion-list>
+      @for (vehicle of vehicles(); track vehicle.id) {
+      <ion-item [routerLink]="['/tabs/vehicle/edit', vehicle.id]" detail="true">
+        <ion-icon name="car-sport-outline" slot="start" color="primary"></ion-icon>
+        <ion-label>
+          <h2>{{ getDisplayName(vehicle) }}</h2>
+          <p>{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}</p>
+          @if (vehicle.license_plate) {
+          <ion-note color="medium">{{ vehicle.license_plate }}</ion-note>
+          }
+        </ion-label>
+        <div slot="end" class="vehicle-info">
+          <ion-note color="medium">
+            <ion-icon name="speedometer-outline"></ion-icon>
+            {{ formatOdometer(vehicle) }}
+          </ion-note>
+        </div>
+      </ion-item>
+      }
+    </ion-list>
+    }
+  </div>
 </ion-content>

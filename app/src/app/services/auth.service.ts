@@ -23,6 +23,7 @@ export class AuthService {
      * Check if user has a token stored
      */
     private hasToken(): boolean {
+        console.log('Checking for token:', localStorage.getItem(this.TOKEN_KEY));
         return !!localStorage.getItem(this.TOKEN_KEY);
     }
 
