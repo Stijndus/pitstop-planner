@@ -12,22 +12,15 @@
   </ion-header>
 
   <div class="ion-padding">
-    <ion-item>
-      <ion-label>Select Vehicle</ion-label>
-      <ion-select placeholder="Choose a vehicle" (ionChange)="onVehicleChange($event)">
-        @for (vehicle of vehicles; track $index) {
-        <ion-select-option [value]="vehicle.id">
-          {{ getVehicleDisplayName(vehicle) }}
-        </ion-select-option>
-        }
-      </ion-select>
-    </ion-item>
+    <ion-button size="block" (click)="openVehiclePicker()">
+      {{ selectedVehicle ? getVehicleDisplayName(selectedVehicle) : 'Choose a vehicle' }}
+    </ion-button>
 
     @if(selectedVehicle) {
     <div class="vehicle-json">
       <h3>Selected Vehicle (JSON)</h3>
       <pre>{{ selectedVehicle | json }}</pre>
     </div>
-    F}
+    }
   </div>
 </ion-content>
