@@ -8,6 +8,8 @@ export interface Vehicle {
     license_plate?: string;
     odometer: number;
     odometer_unit: 'miles' | 'kilometers';
+
+    average_fuel_consumption: number;
     oil_change_interval?: number;
     last_service_date?: string;
     service_interval?: number;

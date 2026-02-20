@@ -1,0 +1,28 @@
+<ion-card class="vehicle-card">
+    <ion-card-header [routerLink]="['/tabs/vehicle/edit', vehicle.id]">
+        <div class="card-title-row">
+            <ion-icon name="car-sport-outline" color="primary"></ion-icon>
+            <ion-card-title>{{ getDisplayName(vehicle) }}</ion-card-title>
+        </div>
+        <p class="vehicle-details">{{ vehicle.year }} {{ vehicle.make }} {{ vehicle.model }}</p>
+        @if (vehicle.license_plate) {
+        <ion-note color="medium">{{ vehicle.license_plate }}</ion-note>
+        }
+    </ion-card-header>
+    <ion-card-content>
+        <div class="vehicle-stats">
+            <div class="stat">
+                <ion-icon name="speedometer-outline"></ion-icon>
+                <span>{{ formatOdometer(vehicle) }}</span>
+            </div>
+            <div class="stat">
+                <ion-icon name="receipt-outline"></ion-icon>
+                <span>{{ vehicle.average_fuel_consumption }} L/100km</span>
+            </div>
+        </div>
+        <ion-button expand="block" (click)="onLogFuel($event)" color="primary">
+            <ion-icon name="water-outline" slot="start"></ion-icon>
+            Log Fuel
+        </ion-button>
+    </ion-card-content>
+</ion-card>

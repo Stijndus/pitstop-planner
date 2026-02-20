@@ -34,6 +34,15 @@ class Vehicle extends Model
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = [
+        'average_fuel_consumption',
+    ];
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -125,5 +134,45 @@ class Vehicle extends Model
 
         // Basic check - can be enhanced with actual odometer-based logic
         return $this->last_service_date->addMonths(6)->isPast();
+    }
+
+    /**
+     * Calculate average fuel consumption (L/100km or mpg depending on unit).
+     * Returns null if insufficient data.
+     */
+    public function getAverageFuelConsumptionAttribute(): ?float
+    {
+        $fullTankLogs = $this->fuelLogs()
+            ->where('is_full_tank', true)
+            ->orderBy('odometer_km', 'asc')
+            ->get();
+
+        if ($fullTankLogs->count() < 2) {
+            return null;
+        }
+
+        $totalFuel = 0;
+        $totalDistance = 0;
+
+        for ($i = 1; $i < $fullTankLogs->count(); $i++) {
+            $currentLog = $fullTankLogs[$i];
+            $previousLog = $fullTankLogs[$i - 1];
+
+            $distance = $currentLog->odometer_km - $previousLog->odometer_km;
+
+            if ($distance > 0) {
+                $totalFuel += $currentLog->fuel_amount;
+                $totalDistance += $distance;
+            }
+        }
+
+        if ($totalDistance <= 0) {
+            return null;
+        }
+
+        // Calculate L/100km
+        $consumption = ($totalFuel / $totalDistance) * 100;
+
+        return round($consumption, 2);
     }
 }

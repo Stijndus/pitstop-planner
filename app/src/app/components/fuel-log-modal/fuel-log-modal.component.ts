@@ -138,7 +138,7 @@ export class FuelLogModalComponent implements OnInit {
             is_full_tank: this.isFullTank()
         };
 
-        this.modalController.dismiss(fuelLogData, 'save');
+        this.modalController.dismiss({ fuelLogData, previousOdometer: this.lastKnownMileage }, 'save');
     }
 
     getFuelUnitLabel(): string {
