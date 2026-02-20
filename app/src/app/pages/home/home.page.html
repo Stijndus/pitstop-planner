@@ -17,10 +17,7 @@
     </ion-button>
 
     @if(selectedVehicle) {
-    <div class="vehicle-json">
-      <h3>Selected Vehicle (JSON)</h3>
-      <pre>{{ selectedVehicle | json }}</pre>
-    </div>
+    <app-vehicle-stats [vehicle]="selectedVehicle"></app-vehicle-stats>
     }
   </div>
 </ion-content>
