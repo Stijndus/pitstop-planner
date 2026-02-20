@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonIcon, IonNote, IonSpinner, IonTitle, IonToolbar, ModalController } from '@ionic/angular/standalone';
+import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonIcon, IonNote, IonSpinner, IonTitle, IonToolbar, ModalController, ToastController } from '@ionic/angular/standalone';
 import { Vehicle } from 'src/app/models/vehicle.model';
 import { VehicleService } from 'src/app/services/vehicle.service';
 import { FuelLogService } from 'src/app/services/fuel-log.service';
@@ -19,6 +19,7 @@ export class GaragePage implements OnInit {
   private vehiclesService = inject(VehicleService);
   private fuelLogService = inject(FuelLogService);
   private modalController = inject(ModalController);
+  private toastController = inject(ToastController);
 
   public vehicles: WritableSignal<Vehicle[]> = signal([]);
   public isLoading = signal(false);
@@ -89,8 +90,16 @@ export class GaragePage implements OnInit {
     this.fuelLogService.createFuelLog(fuelLogData.vehicle_id, fuelLogData).subscribe({
       next: (response) => {
         if (response.success) {
-          console.log('Fuel log saved successfully:', response.data);
-          // Optionally show a toast or success message
+          // Show a success message and refresh the fuel logs for the vehicle
+
+          this.toastController.create({
+            message: 'Fuel log saved successfully',
+            duration: 2000,
+            color: 'success'
+          }).then(toast => toast.present());
+
+          this.loadVehicles(); // Refresh the vehicle list to show updated fuel log info
+
         } else {
           console.error('Failed to save fuel log:', response.message);
         }

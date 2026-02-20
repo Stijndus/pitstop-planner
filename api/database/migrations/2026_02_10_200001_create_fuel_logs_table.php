@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('fuel_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('vehicle_id')->constrained()->onDelete('cascade');
+            $table->foreignId('vehicle_id')->constrained()->onDelete();
             $table->timestamp('date')->useCurrent();
             $table->decimal('odometer_km', 10, 2);
             $table->decimal('fuel_price_per_unit', 8, 2);
