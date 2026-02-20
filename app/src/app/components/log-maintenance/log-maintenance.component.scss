@@ -7,6 +7,13 @@
     font-size: 14px;
 }
 
+.validation-error {
+    color: var(--ion-color-danger);
+    font-size: 12px;
+    padding: 4px 16px 8px;
+    margin-top: -8px;
+}
+
 ion-item {
     margin-bottom: 12px;
 }

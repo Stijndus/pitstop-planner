@@ -1,8 +1,7 @@
-import { Component, input, OnInit, output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
-    IonModal,
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -15,11 +14,9 @@ import {
     IonSelectOption,
     IonInput,
     IonTextarea,
-    IonDatetime,
-    IonDatetimeButton,
+    ModalController,
 } from '@ionic/angular/standalone';
 import { MaintenanceService } from '../../services/maintenance.service';
-import { CreateMaintenanceLogData } from '../../models/maintenance-log.model';
 import { Vehicle } from '../../models/vehicle.model';
 
 @Component({
@@ -29,8 +26,7 @@ import { Vehicle } from '../../models/vehicle.model';
     standalone: true,
     imports: [
         CommonModule,
-        FormsModule,
-        IonModal,
+        ReactiveFormsModule,
         IonHeader,
         IonToolbar,
         IonTitle,
@@ -43,36 +39,48 @@ import { Vehicle } from '../../models/vehicle.model';
         IonSelectOption,
         IonInput,
         IonTextarea,
-        IonDatetime,
-        IonDatetimeButton,
     ],
 })
 export class LogMaintenanceComponent implements OnInit {
-    vehicle = input.required<Vehicle>();
-    isOpen = input<boolean>(false);
-    closed = output<void>();
-    saved = output<void>();
+    @Input() vehicle!: Vehicle;
 
+    maintenanceForm!: FormGroup;
     serviceTypes: string[] = [];
     serviceIntervals: { [key: string]: number | null } = {};
-
-    formData: CreateMaintenanceLogData = {
-        vehicle_id: 0,
-        service_type: '',
-        date_performed: new Date().toISOString().split('T')[0],
-        odometer_km: 0,
-        currency: 'EUR',
-    };
 
     loading = false;
     error: string | null = null;
 
-    constructor(private maintenanceService: MaintenanceService) { }
+    constructor(
+        private fb: FormBuilder,
+        private maintenanceService: MaintenanceService,
+        private modalController: ModalController
+    ) { }
 
     ngOnInit() {
+        this.initializeForm();
         this.loadServiceTypes();
-        this.formData.vehicle_id = this.vehicle().id;
-        this.formData.odometer_km = this.vehicle().odometer;
+        this.setupServiceTypeListener();
+    }
+
+    initializeForm() {
+        this.maintenanceForm = this.fb.group({
+            vehicle_id: [this.vehicle.id, [Validators.required]],
+            service_type: ['', [Validators.required]],
+            custom_description: [''],
+            date_performed: [new Date().toISOString().split('T')[0], [Validators.required]],
+            odometer_km: [this.vehicle.odometer, [Validators.required, Validators.min(1)]],
+            cost: [null],
+            currency: ['EUR'],
+            interval_km: [null],
+            notes: [''],
+        });
+    }
+
+    setupServiceTypeListener() {
+        this.maintenanceForm.get('service_type')?.valueChanges.subscribe(serviceType => {
+            this.onServiceTypeChange(serviceType);
+        });
     }
 
     loadServiceTypes() {
@@ -89,59 +97,64 @@ export class LogMaintenanceComponent implements OnInit {
         });
     }
 
-    onServiceTypeChange() {
-        const serviceType = this.formData.service_type;
+    onServiceTypeChange(serviceType: string) {
+        const customDescControl = this.maintenanceForm.get('custom_description');
+        const intervalControl = this.maintenanceForm.get('interval_km');
 
-        // Auto-fill interval for non-Custom service types
-        if (serviceType && serviceType !== 'Custom') {
+        // Update custom_description validation
+        if (serviceType === 'Custom') {
+            customDescControl?.setValidators([Validators.required]);
+            intervalControl?.enable();
+            intervalControl?.setValue(null);
+        } else {
+            customDescControl?.clearValidators();
+            customDescControl?.setValue('');
+
+            // Auto-fill interval for non-Custom service types
             const interval = this.serviceIntervals[serviceType];
             if (interval !== null && interval !== undefined) {
-                this.formData.interval_km = interval;
+                intervalControl?.setValue(interval);
+                intervalControl?.disable();
             }
-        } else {
-            // Clear interval for Custom
-            this.formData.interval_km = undefined;
         }
+
+        customDescControl?.updateValueAndValidity();
     }
 
     get isCustomService(): boolean {
-        return this.formData.service_type === 'Custom';
+        return this.maintenanceForm.get('service_type')?.value === 'Custom';
     }
 
     onCancel() {
-        this.resetForm();
-        this.closed.emit();
+        this.modalController.dismiss({
+            saved: false,
+        });
     }
 
     onSave() {
         this.error = null;
+
+        // Mark all fields as touched to show validation errors
+        Object.keys(this.maintenanceForm.controls).forEach(key => {
+            this.maintenanceForm.get(key)?.markAsTouched();
+        });
+
+        if (this.maintenanceForm.invalid) {
+            this.error = 'Please fill in all required fields correctly';
+            return;
+        }
+
         this.loading = true;
 
-        // Validation
-        if (!this.formData.service_type) {
-            this.error = 'Service type is required';
-            this.loading = false;
-            return;
-        }
+        // Get form value and include disabled controls (interval_km when not custom)
+        const formValue = this.maintenanceForm.getRawValue();
 
-        if (this.isCustomService && !this.formData.custom_description) {
-            this.error = 'Description is required for custom service';
-            this.loading = false;
-            return;
-        }
-
-        if (!this.formData.odometer_km || this.formData.odometer_km < 1) {
-            this.error = 'Valid odometer reading is required';
-            this.loading = false;
-            return;
-        }
-
-        this.maintenanceService.createMaintenanceLog(this.formData).subscribe({
+        this.maintenanceService.createMaintenanceLog(formValue).subscribe({
             next: () => {
                 this.loading = false;
-                this.resetForm();
-                this.saved.emit();
-                this.closed.emit();
+                this.modalController.dismiss({
+                    saved: true,
+                });
             },
             error: (err) => {
                 this.loading = false;
@@ -151,14 +164,14 @@ export class LogMaintenanceComponent implements OnInit {
         });
     }
 
-    resetForm() {
-        this.formData = {
-            vehicle_id: this.vehicle().id,
-            service_type: '',
-            date_performed: new Date().toISOString().split('T')[0],
-            odometer_km: this.vehicle().odometer,
-            currency: 'EUR',
-        };
-        this.error = null;
+    getErrorMessage(fieldName: string): string {
+        const control = this.maintenanceForm.get(fieldName);
+        if (control?.hasError('required') && control?.touched) {
+            return 'This field is required';
+        }
+        if (control?.hasError('min') && control?.touched) {
+            return 'Value must be greater than 0';
+        }
+        return '';
     }
 }

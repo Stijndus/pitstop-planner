@@ -1,84 +1,89 @@
-<ion-modal [isOpen]="isOpen()" (didDismiss)="onCancel()">
-    <ng-template>
-        <ion-header>
-            <ion-toolbar>
-                <ion-title>Log Maintenance</ion-title>
-                <ion-buttons slot="end">
-                    <ion-button (click)="onCancel()">Cancel</ion-button>
-                </ion-buttons>
-            </ion-toolbar>
-        </ion-header>
+<ion-header>
+    <ion-toolbar>
+        <ion-title>Log Maintenance</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="onCancel()">Cancel</ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
 
-        <ion-content class="ion-padding">
-            @if (error) {
-            <div class="error-message">
-                {{ error }}
-            </div>
-            }
+<ion-content class="ion-padding">
+    @if (error) {
+    <div class="error-message">
+        {{ error }}
+    </div>
+    }
 
-            <ion-item>
-                <ion-label position="stacked">Service Type *</ion-label>
-                <ion-select [(ngModel)]="formData.service_type" (ionChange)="onServiceTypeChange()"
-                    placeholder="Select service type">
-                    @for (type of serviceTypes; track type) {
-                    <ion-select-option [value]="type">{{ type }}</ion-select-option>
-                    }
-                </ion-select>
-            </ion-item>
+    <form [formGroup]="maintenanceForm">
+        <ion-item>
+            <ion-label position="stacked">Service Type *</ion-label>
+            <ion-select formControlName="service_type" placeholder="Select service type">
+                @for (type of serviceTypes; track type) {
+                <ion-select-option [value]="type">{{ type }}</ion-select-option>
+                }
+            </ion-select>
+        </ion-item>
+        @if (getErrorMessage('service_type')) {
+        <div class="validation-error">{{ getErrorMessage('service_type') }}</div>
+        }
 
-            @if (isCustomService) {
-            <ion-item>
-                <ion-label position="stacked">Description *</ion-label>
-                <ion-input [(ngModel)]="formData.custom_description"
-                    placeholder="Enter service description"></ion-input>
-            </ion-item>
-            }
+        @if (isCustomService) {
+        <ion-item>
+            <ion-label position="stacked">Description *</ion-label>
+            <ion-input formControlName="custom_description" placeholder="Enter service description"></ion-input>
+        </ion-item>
+        @if (getErrorMessage('custom_description')) {
+        <div class="validation-error">{{ getErrorMessage('custom_description') }}</div>
+        }
+        }
 
-            <ion-item>
-                <ion-label position="stacked">Date Performed *</ion-label>
-                <ion-input type="date" [(ngModel)]="formData.date_performed"></ion-input>
-            </ion-item>
+        <ion-item>
+            <ion-label position="stacked">Date Performed *</ion-label>
+            <ion-input type="date" formControlName="date_performed"></ion-input>
+        </ion-item>
+        @if (getErrorMessage('date_performed')) {
+        <div class="validation-error">{{ getErrorMessage('date_performed') }}</div>
+        }
 
-            <ion-item>
-                <ion-label position="stacked">Odometer (km) *</ion-label>
-                <ion-input type="number" [(ngModel)]="formData.odometer_km"
-                    placeholder="Enter odometer reading"></ion-input>
-            </ion-item>
+        <ion-item>
+            <ion-label position="stacked">Odometer (km) *</ion-label>
+            <ion-input type="number" formControlName="odometer_km" placeholder="Enter odometer reading"></ion-input>
+        </ion-item>
+        @if (getErrorMessage('odometer_km')) {
+        <div class="validation-error">{{ getErrorMessage('odometer_km') }}</div>
+        }
 
-            <ion-item>
-                <ion-label position="stacked">Cost</ion-label>
-                <ion-input type="number" [(ngModel)]="formData.cost" placeholder="Enter cost (optional)"></ion-input>
-            </ion-item>
+        <ion-item>
+            <ion-label position="stacked">Cost</ion-label>
+            <ion-input type="number" formControlName="cost" placeholder="Enter cost (optional)"></ion-input>
+        </ion-item>
 
-            <ion-item>
-                <ion-label position="stacked">Currency</ion-label>
-                <ion-select [(ngModel)]="formData.currency">
-                    <ion-select-option value="EUR">EUR</ion-select-option>
-                    <ion-select-option value="USD">USD</ion-select-option>
-                    <ion-select-option value="GBP">GBP</ion-select-option>
-                </ion-select>
-            </ion-item>
+        <ion-item>
+            <ion-label position="stacked">Currency</ion-label>
+            <ion-select formControlName="currency">
+                <ion-select-option value="EUR">EUR</ion-select-option>
+                <ion-select-option value="USD">USD</ion-select-option>
+                <ion-select-option value="GBP">GBP</ion-select-option>
+            </ion-select>
+        </ion-item>
 
-            <ion-item>
-                <ion-label position="stacked">
-                    Interval (km)
-                    @if (!isCustomService) {
-                    <span class="hint">(auto-filled)</span>
-                    }
-                </ion-label>
-                <ion-input type="number" [(ngModel)]="formData.interval_km" placeholder="Enter interval"
-                    [disabled]="!isCustomService"></ion-input>
-            </ion-item>
+        <ion-item>
+            <ion-label position="stacked">
+                Interval (km)
+                @if (!isCustomService) {
+                <span class="hint">(auto-filled)</span>
+                }
+            </ion-label>
+            <ion-input type="number" formControlName="interval_km" placeholder="Enter interval"></ion-input>
+        </ion-item>
 
-            <ion-item>
-                <ion-label position="stacked">Notes</ion-label>
-                <ion-textarea [(ngModel)]="formData.notes" placeholder="Additional notes (optional)"
-                    rows="4"></ion-textarea>
-            </ion-item>
+        <ion-item>
+            <ion-label position="stacked">Notes</ion-label>
+            <ion-textarea formControlName="notes" placeholder="Additional notes (optional)" rows="4"></ion-textarea>
+        </ion-item>
 
-            <ion-button expand="block" (click)="onSave()" [disabled]="loading" class="save-button">
-                {{ loading ? 'Saving...' : 'Save Maintenance Log' }}
-            </ion-button>
-        </ion-content>
-    </ng-template>
-</ion-modal>
+        <ion-button expand="block" (click)="onSave()" [disabled]="loading" class="save-button">
+            {{ loading ? 'Saving...' : 'Save Maintenance Log' }}
+        </ion-button>
+    </form>
+</ion-content>
