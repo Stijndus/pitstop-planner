@@ -78,6 +78,14 @@ class Vehicle extends Model
     }
 
     /**
+     * Get all maintenance logs for the vehicle.
+     */
+    public function maintenanceLogs(): HasMany
+    {
+        return $this->hasMany(MaintenanceLog::class);
+    }
+
+    /**
      * Scope to filter active vehicles.
      */
     public function scopeActive($query)
